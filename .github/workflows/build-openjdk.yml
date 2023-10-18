@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "openjdk/.version"
+      - ".github/workflows/build-openjdk.yml"
 
 jobs:
   build:
