@@ -1,7 +1,10 @@
 name: Build OpenJDK docker image
+
 on:
   push:
-    branches: *
+    branches: [main]
+    paths:
+      - "openjdk/.version"
 
 jobs:
   build:
