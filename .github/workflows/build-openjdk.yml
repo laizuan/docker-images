@@ -11,19 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code 😀
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Login Aliyun Container Registry 👀
-        uses: aliyun/acr-login@v1
+      - name: Get release version 🚀
+        run: |
+          echo "VERSION=$(tail -n -1 ./openjdk/.version)" >> $GITHUB_ENV
+
+      - name: Log in to Docker Hub 👀
+        uses: docker/login-action@v3
         with:
-          login-server: registry.cn-shenzhen.aliyuncs.com
-          region-id: cn-shenzhen
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
 
-      - name: Build the openjdk docker image 🌈
-        run: |
-          VERSION=$(tail -n -1 ./openjdk/.version)
-          docker version
-          docker build . --file ./openjdk/Dockerfile --tag registry.cn-shenzhen.aliyuncs.com/lhrdc/lhrdc-openjdk:$VERSION-jre-alpine
-          docker push registry.cn-shenzhen.aliyuncs.com/lhrdc/lhrdc-openjdk:$VERSION-jre-alpine
+      - name: Build and push the openjdk docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./openjdk
+          push: true
+          tags: "lhrdc/openjdk:${VERSION},lhrdc/openjdk:latest"
