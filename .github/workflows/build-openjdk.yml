@@ -23,9 +23,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
 
-      - name: Build and push the openjdk docker image
+      - name: Build and push the openjdk docker image ✌️
         uses: docker/build-push-action@v5
         with:
           context: ./openjdk
           push: true
-          tags: "lhrdc/openjdk:${VERSION},lhrdc/openjdk:latest"
+          tags: "lhrdc/openjdk:${{ VERSION }},lhrdc/openjdk:latest"
