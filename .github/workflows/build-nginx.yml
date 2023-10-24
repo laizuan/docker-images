@@ -1,0 +1,34 @@
+name: Build nginx stable alpine docker image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "nginx/.version"
+      - ".github/workflows/build-nginx.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code 😀
+        uses: actions/checkout@v4
+
+      - name: Get release version 🚀
+        id: getVersion
+        run: echo "::set-output name=version::$(tail -n -1 ./nginx/.version)"
+
+      - name: Log in to Docker Hub 👀
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+
+      - name: Build and push the nginx docker image ✌️
+        uses: docker/build-push-action@v5
+        with:
+          context: ./nginx
+          push: true
+          tags: |
+            ${{ secrets.USERNAME }}/nginx:${{ steps.getVersion.outputs.version }}
+            ${{ secrets.USERNAME }}/nginx:latest
