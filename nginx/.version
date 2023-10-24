@@ -1,2 +1,2 @@
 # 第一位"."前面的数值表示自定义版本，后面版本表示 nginx stable-alpine 版本号。
-1.stable-alpine
+2.stable-alpine
