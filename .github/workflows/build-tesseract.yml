@@ -1,0 +1,34 @@
+name: Build TesseractOCR docker image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tesseract/.version"
+      - ".github/workflows/build-tesseract.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code 😀
+        uses: actions/checkout@v4
+
+      - name: Get release version 🚀
+        id: getVersion
+        run: echo "::set-output name=version::$(tail -n -1 ./tesseract/.version)"
+
+      - name: Log in to Docker Hub 👀
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+
+      - name: Build and push the tesseract docker image ✌️
+        uses: docker/build-push-action@v5
+        with:
+          context: ./tesseract
+          push: true
+          tags: |
+            ${{ secrets.USERNAME }}/tesseract-ocr:${{ steps.getVersion.outputs.version }}
+            ${{ secrets.USERNAME }}/tesseract-ocr:latest
