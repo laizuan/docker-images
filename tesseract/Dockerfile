@@ -25,7 +25,7 @@ RUN git clone https://github.com/tesseract-ocr/tesstrain.git && \
  pip install -r requirements.txt && make tesseract-langdata
 
 # Test
-RUN tesseract --version
+# RUN tesseract --version
 
 # 安装openjdk
 RUN wget -O openjdk-21.tar.gz -p https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz
