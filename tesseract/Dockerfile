@@ -29,32 +29,32 @@ ENV OCR_VERSION="5.3.3" \
 # 设置时区
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 
-# WORKDIR /src
+WORKDIR /src
 
-# # 下载 tesseract ocr 解压并安装
-# RUN wget -qO tesseract.tar.gz https://codeload.github.com/tesseract-ocr/tesseract/tar.gz/refs/tags/$OCR_VERSION && \
-#     tar -xzf tesseract.tar.gz && \
-#     rm tesseract.tar.gz && \
-#     mv tesseract-* tesseract
+# 下载 tesseract ocr 解压并安装
+RUN wget -qO tesseract.tar.gz https://codeload.github.com/tesseract-ocr/tesseract/tar.gz/refs/tags/$OCR_VERSION && \
+    tar -xzf tesseract.tar.gz && \
+    rm tesseract.tar.gz && \
+    mv tesseract-* tesseract
 
-# WORKDIR /src/tesseract
+WORKDIR /src/tesseract
 
-# RUN ./autogen.sh && \
-#     ./configure && \
-#     make && \
-#     make install && \
-#     ldconfig
+RUN ./autogen.sh && \
+    ./configure && \
+    make && \
+    make install && \
+    ldconfig
 
-# # go to default traineddata directory
-# WORKDIR /usr/local/share/tessdata/
-# # copy language script and list to image
-# COPY get-languages.sh .
-# COPY languages.txt .
+# go to default traineddata directory
+WORKDIR /usr/local/share/tessdata/
+# copy language script and list to image
+COPY get-languages.sh .
+COPY languages.txt .
 
-# # make script executable
-# RUN chmod +x ./get-languages.sh
-# # download traineddata languages
-# RUN ./get-languages.sh
+# make script executable
+RUN chmod +x ./get-languages.sh
+# download traineddata languages
+RUN ./get-languages.sh
 
 # 下载并编译训练库 tesstrain
 # RUN git clone https://github.com/tesseract-ocr/tesstrain.git && \
@@ -81,7 +81,7 @@ RUN set -eux; \
     echo "java --version"; java --version; \
     echo "Jdk install complete."
 
-# WORKDIR /tmp/
+WORKDIR /tmp/
 
-# # Test tesseract ocr
-# CMD ["tesseract", "--list-langs"]
+# Test tesseract ocr
+CMD ["tesseract", "--list-langs"]
