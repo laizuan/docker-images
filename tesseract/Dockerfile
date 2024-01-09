@@ -62,19 +62,18 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 #  pip install -r requirements.txt && make tesseract-langdata
 
 # 设置环境变量
-ENV JAVA_HOME /opt/java/openjdk
+ENV JAVA_HOME /opt/java/jdk
 ENV TESSERACT_HOME /usr/local/tesseract
 ENV TESSDATA_PREFIX=$TESSERACT_HOME/share/tessdata
 ENV PATH $TESSERACT_HOME/bin:$TESSDATA_PREFIX:$JAVA_HOME/bin:$PATH
 
 # 安装openjdk
-WORKDIR /opt
+WORKDIR /opt/java
 RUN wget -qO java.tar.gz https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz && \
  ls && pwd
-RUN tar -xvf java.tar.gz &&  ls && pwd && \
+RUN tar -xvf java.tar.gz && \
  rm java.tar.gz && \
- cd ./java && \
- mv jdk-* openjdk
+ mv jdk-* jdk
 
 
 RUN set -eux; \
