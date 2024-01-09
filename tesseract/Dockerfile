@@ -73,11 +73,12 @@ ENV PATH $TESSERACT_HOME/bin:$TESSDATA_PREFIX:$JAVA_HOME/bin:$PATH
 
 
 # 安装openjdk
-WORKDIR /opt/java/
+WORKDIR /opt
 
-RUN wget -qO openjdk-21.tar.gz https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz && \
-    tar -zxvf openjdk-21.tar.gz && \
-    rm openjdk-21.tar.gz && \
+RUN wget -qO java.tar.gz https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz && \
+    tar -zxvf java.tar.gz && \
+    rm java.tar.gz && \
+    cd ./java && \
     mv openjdk-* openjdk
 
 RUN set -eux; \
