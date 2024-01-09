@@ -70,8 +70,8 @@ ENV PATH $TESSERACT_HOME/bin:$TESSDATA_PREFIX:$JAVA_HOME/bin:$PATH
 # 安装openjdk
 WORKDIR /opt
 RUN wget -qO java.tar.gz https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz && \
- ls && pwd \
- tar -xvf java.tar.gz && \
+ ls && pwd
+RUN tar -xvf java.tar.gz &&  ls && pwd && \
  rm java.tar.gz && \
  cd ./java && \
  mv jdk-* openjdk
