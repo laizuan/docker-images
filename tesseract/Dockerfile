@@ -24,10 +24,6 @@ RUN apt-get update && apt-get install --no-install-recommends --yes \
 
 
 ENV OCR_VERSION="5.3.3" \
-    BASE_WORKDIR="/home/leaderrun" \
-    JAVA_OPTS="" \
-    PORT="5432" \
-    TESSDATA_PREFIX="/usr/local/share/tessdata" \
     TZ=Asia/Shanghai
 
 # 设置时区
@@ -71,15 +67,14 @@ ENV TESSERACT_HOME /usr/local/tesseract
 ENV TESSDATA_PREFIX=$TESSERACT_HOME/share/tessdata
 ENV PATH $TESSERACT_HOME/bin:$TESSDATA_PREFIX:$JAVA_HOME/bin:$PATH
 
-
 # 安装openjdk
 WORKDIR /opt
-
 RUN wget -qO java.tar.gz https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz && \
-    tar -zxvf java.tar.gz && \
-    rm java.tar.gz && \
-    cd ./java && \
-    mv openjdk-* openjdk
+ tar -xvf java.tar.gz && \
+ rm java.tar.gz && \
+ cd ./java && \
+ mv jdk-* openjdk
+
 
 RUN set -eux; \
     echo "Verifying install ..."; \
