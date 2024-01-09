@@ -1,6 +1,27 @@
-FROM ubuntu:22.04
+FROM debian:12
 
-RUN apt update && apt install -y git autoconf automake libtool pkg-config libpng-dev libjpeg8-dev libtiff5-dev zlib1g-dev libwebpdemux2 libwebp-dev libopenjp2-7-dev libgif-dev libarchive-dev libcurl4-openssl-dev libicu-dev libpango1.0-dev libcairo2-dev libleptonica-dev wget python3-pip
+RUN apt-get update && apt-get install --no-install-recommends --yes \
+    apt-transport-https \
+    asciidoc \
+    automake \
+    bash \
+    ca-certificates \
+    curl \
+    docbook-xsl \
+    g++ \
+    git \
+    libleptonica-dev \
+    libtool \
+    libicu-dev \
+    libpango1.0-dev \
+    libcairo2-dev \
+    make \
+    pkg-config \
+    wget \
+    xsltproc \
+    python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
 
 ENV OCR_VERSION="5.3.3" \
     BASE_WORKDIR="/home/leaderrun" \
@@ -12,30 +33,59 @@ ENV OCR_VERSION="5.3.3" \
 # 设置时区
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 
+WORKDIR /src
+
 # 下载 tesseract ocr 解压并安装
-RUN wget -O tesseract.tar.gz -p https://codeload.github.com/tesseract-ocr/tesseract/tar.gz/refs/tags/$OCR_VERSION
-RUN tar -zxvf tesseract.tar.gz
-RUN cd ./tesseract-$OCR_VERSION && \
-    ./autogen.sh && \
+RUN wget -qO tesseract.tar.gz https://codeload.github.com/tesseract-ocr/tesseract/tar.gz/refs/tags/$OCR_VERSION && \
+    tar -xzf tesseract.tar.gz && \
+    rm tesseract.tar.gz && \
+    mv tesseract-* tesseract
+
+WORKDIR /src/tesseract
+
+RUN ./autogen.sh && \
     ./configure && \
-    make && make install && \
-    make training && make training-install
+    make && \
+    make install && \
+    ldconfig
+
+# go to default traineddata directory
+WORKDIR /usr/local/share/tessdata/
+# copy language script and list to image
+COPY get-languages.sh .
+COPY languages.txt .
+
+# make script executable
+RUN chmod +x ./get-languages.sh
+# download traineddata languages
+RUN ./get-languages.sh
 
 # 下载并编译训练库 tesstrain
-RUN git clone https://github.com/tesseract-ocr/tesstrain.git && \
- cd ./tesstrain && \
- pip install -r requirements.txt && make tesseract-langdata
+# RUN git clone https://github.com/tesseract-ocr/tesstrain.git && \
+#  cd ./tesstrain && \
+#  pip install -r requirements.txt && make tesseract-langdata
 
-# Test tesseract ocr
+# 设置环境变量
+ENV JAVA_HOME /opt/java/openjdk
+ENV TESSERACT_HOME /usr/local/tesseract
+ENV TESSDATA_PREFIX=/usr/local/tesseract/share/tessdata
+ENV PATH $TESSERACT_HOME/bin:$TESSDATA_PREFIX:$JAVA_HOME/bin:$PATH
 
 
 # 安装openjdk
-RUN wget -O openjdk-21.tar.gz -p https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz
-RUN tar -zxvf openjdk-21.tar.gz
-ENV JAVA_HOME /jdk-21.0.1
-ENV PATH $PATH:$JAVA_HOME/bin
+WORKDIR /opt/java/
 
-## 删除压缩包
-RUN rm -rf tesseract.tar.gz openjdk-21.tar.gz
+RUN wget -qO openjdk-21.tar.gz https://download.java.net/java/GA/jdk21.0.1/415e3f918a1f4062a0074a2794853d0d/12/GPL/openjdk-21.0.1_linux-x64_bin.tar.gz && \
+    tar -zxvf openjdk-21.tar.gz && \
+    rm openjdk-21.tar.gz && \
+    mv openjdk-* openjdk
 
+RUN set -eux; \
+    echo "Verifying install ..."; \
+    echo "java --version"; java --version; \
+    echo "Jdk install complete."
+
+WORKDIR /tmp/
+
+# Test tesseract ocr
 CMD ["tesseract", "--list-langs"]
