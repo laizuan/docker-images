@@ -68,7 +68,7 @@ RUN ./get-languages.sh
 # 设置环境变量
 ENV JAVA_HOME /opt/java/openjdk
 ENV TESSERACT_HOME /usr/local/tesseract
-ENV TESSDATA_PREFIX=/usr/local/tesseract/share/tessdata
+ENV TESSDATA_PREFIX=$TESSERACT_HOME/share/tessdata
 ENV PATH $TESSERACT_HOME/bin:$TESSDATA_PREFIX:$JAVA_HOME/bin:$PATH
 
 
