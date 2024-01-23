@@ -21,7 +21,7 @@ jobs:
       - name: Build with Maven 🔧
         run: |
           version=${{ steps.getVersion.outputs.version }}
-          curl -I "https://archive.apache.org/dist/seatunnel/${version}/apache-seatunnel-${version}-bin.tar.gz"
+          wget -q "https://archive.apache.org/dist/seatunnel/${version}/apache-seatunnel-${version}-bin.tar.gz"
           tar -xzvf "apache-seatunnel-${version}-bin.tar.gz"
           cd apache-seatunnel-${version}
           pwd
