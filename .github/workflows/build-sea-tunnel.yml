@@ -18,13 +18,6 @@ jobs:
         id: getVersion
         run: echo "::set-output name=version::$(tail -n -1 ./sea-tunnel/.version)"
 
-      - name: Set up JDK 21 👀
-        uses: actions/setup-java@v3
-        with:
-          java-version: 21
-          distribution: "temurin"
-          cache: maven
-
       - name: Build with Maven 🔧
         run: |
           version=${{ steps.getVersion.outputs.version }}
