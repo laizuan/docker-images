@@ -23,7 +23,7 @@ jobs:
           version=${{ steps.getVersion.outputs.version }}
           wget -q "https://archive.apache.org/dist/seatunnel/${version}/apache-seatunnel-${version}-bin.tar.gz"
           tar -xzvf "apache-seatunnel-${version}-bin.tar.gz"
-          sh ./apache-seatunnel-${version}/bin/install-plugin.sh ${version}
+          sh apache-seatunnel-${version}/bin/install-plugin.sh ${version}
           tar -czvf  apache-seatunnel-${version}-bin.tar.gz  apache-seatunnel-${version}
 
       - name: Log in to Docker Hub 👀
