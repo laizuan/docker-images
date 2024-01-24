@@ -35,10 +35,6 @@ jobs:
     needs:
       - build-seatunnel
     steps:
-      - name: Get release version 🚀
-        id: getVersion
-        run: echo "::set-output name=version::$(tail -n -1 ./sea-tunnel/.version)"
-
       - name: Log in to Docker Hub 👀
         uses: docker/login-action@v3
         with:
@@ -51,5 +47,5 @@ jobs:
           context: ./sea-tunnel
           push: true
           tags: |
-            ${{ secrets.USERNAME }}/sea-tunnel:${{ steps.getVersion.outputs.version }}
+            ${{ secrets.USERNAME }}/sea-tunnel:${{ needs.build-seatunnel.outputs.version }}
             ${{ secrets.USERNAME }}/sea-tunnel:latest
