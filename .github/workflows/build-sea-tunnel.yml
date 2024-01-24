@@ -28,6 +28,7 @@ jobs:
           sh ./bin/install-plugin.sh ${{env.app_version}}
           cd ../
           mv apache-seatunnel-${{env.app_version}} seatunnel
+          ls
 
   build-seatunnel-image:
     name: "Build image"
@@ -41,10 +42,14 @@ jobs:
           username: ${{ secrets.USERNAME }}
           password: ${{ secrets.PASSWORD }}
 
+      - name: Build seatunnel 🔧
+        run: |
+          ls
+
       - name: Build and push the seatunnel docker image ✌️
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./sea-tunnel
           push: true
           tags: |
             ${{ secrets.USERNAME }}/sea-tunnel:${{env.app_version}}
