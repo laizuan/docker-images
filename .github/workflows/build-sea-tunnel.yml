@@ -22,12 +22,12 @@ jobs:
 
       - name: Build seatunnel 🔧
         run: |
-          wget -q "https://archive.apache.org/dist/seatunnel/$app_version/apache-seatunnel-$app_version-bin.tar.gz"
-          tar -xzvf "apache-seatunnel-$app_version-bin.tar.gz"
-          cd apache-seatunnel-$app_version
-          sh ./bin/install-plugin.sh $app_version
+          wget -q "https://archive.apache.org/dist/seatunnel/${{env.app_version}}/apache-seatunnel-${{env.app_version}}-bin.tar.gz"
+          tar -xzvf "apache-seatunnel-${{env.app_version}}-bin.tar.gz"
+          cd apache-seatunnel-${{env.app_version}}
+          sh ./bin/install-plugin.sh ${{env.app_version}}
           cd ../
-          mv apache-seatunnel-$app_version seatunnel
+          mv apache-seatunnel-${{env.app_version}} seatunnel
 
   build-seatunnel-image:
     name: "Build image"
@@ -47,5 +47,5 @@ jobs:
           context: ./sea-tunnel
           push: true
           tags: |
-            ${{ secrets.USERNAME }}/sea-tunnel:$app_version
+            ${{ secrets.USERNAME }}/sea-tunnel:${{env.app_version}}
             ${{ secrets.USERNAME }}/sea-tunnel:latest
