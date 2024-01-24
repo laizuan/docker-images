@@ -18,7 +18,13 @@ jobs:
         id: getVersion
         run: echo "::set-output name=version::$(tail -n -1 ./sea-tunnel/.version)"
 
-      - name: Build with Maven 🔧
+      - name: Log in to Docker Hub 👀
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+
+      - name: Build seatunnel 🔧
         run: |
           version=${{ steps.getVersion.outputs.version }}
           wget -q "https://archive.apache.org/dist/seatunnel/${version}/apache-seatunnel-${version}-bin.tar.gz"
@@ -28,13 +34,7 @@ jobs:
           cd ../
           mv apache-seatunnel-${version} seatunnel
 
-      - name: Log in to Docker Hub 👀
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-
-      - name: Build and push the tesseract docker image ✌️
+      - name: Build and push the seatunnel docker image ✌️
         uses: docker/build-push-action@v5
         with:
           context: ./sea-tunnel
