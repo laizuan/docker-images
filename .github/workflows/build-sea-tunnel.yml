@@ -18,18 +18,16 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get release version 🚀
-        id: getVersion
-        run: echo "::set-output name=version::$(tail -n -1 ./sea-tunnel/.version)"
+        run: echo "app_version=$(tail -n -1 ./sea-tunnel/.version)" >> "$GITHUB_ENV"
 
       - name: Build seatunnel 🔧
         run: |
-          version=${{ steps.getVersion.outputs.version }}
-          wget -q "https://archive.apache.org/dist/seatunnel/${version}/apache-seatunnel-${version}-bin.tar.gz"
-          tar -xzvf "apache-seatunnel-${version}-bin.tar.gz"
-          cd apache-seatunnel-${version}
-          sh ./bin/install-plugin.sh ${version}
+          wget -q "https://archive.apache.org/dist/seatunnel/$app_version/apache-seatunnel-$app_version-bin.tar.gz"
+          tar -xzvf "apache-seatunnel-$app_version-bin.tar.gz"
+          cd apache-seatunnel-$app_version
+          sh ./bin/install-plugin.sh $app_version
           cd ../
-          mv apache-seatunnel-${version} seatunnel
+          mv apache-seatunnel-$app_version seatunnel
 
   build-seatunnel-image:
     name: "Build image"
@@ -49,5 +47,5 @@ jobs:
           context: ./sea-tunnel
           push: true
           tags: |
-            ${{ secrets.USERNAME }}/sea-tunnel:${{ needs.build-seatunnel.outputs.version }}
+            ${{ secrets.USERNAME }}/sea-tunnel:$app_version
             ${{ secrets.USERNAME }}/sea-tunnel:latest
