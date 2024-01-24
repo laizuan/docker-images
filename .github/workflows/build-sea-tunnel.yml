@@ -8,9 +8,9 @@ on:
       - ".github/workflows/build-sea-tunnel.yml"
 
 jobs:
-  build:
-    # runs-on: macos-latest
-    runs-on: ubuntu-latest
+  build-seatunnel:
+    name: Build SeaTunnel
+    runs-on: macos-latest
     steps:
       - name: Checkout code 😀
         uses: actions/checkout@v4
@@ -28,7 +28,12 @@ jobs:
           sh ./bin/install-plugin.sh ${version}
           cd ../
           mv apache-seatunnel-${version} seatunnel
-
+  build-seatunnel-image:
+    name: "Build image"
+    runs-on: ubuntu-latest
+    needs:
+      - build-seatunnel
+    steps:
       - name: Log in to Docker Hub 👀
         uses: docker/login-action@v3
         with:
