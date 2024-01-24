@@ -26,7 +26,7 @@ jobs:
           cd apache-seatunnel-${version}
           sh ./bin/install-plugin.sh ${version}
           cd ../
-          mv apache-seatunnel-${SEATUNNEL_VERSION} seatunnel
+          mv apache-seatunnel-${version} seatunnel
 
       - name: Log in to Docker Hub 👀
         uses: docker/login-action@v3
