@@ -28,12 +28,17 @@ jobs:
           sh ./bin/install-plugin.sh ${version}
           cd ../
           mv apache-seatunnel-${version} seatunnel
+
   build-seatunnel-image:
     name: "Build image"
     runs-on: ubuntu-latest
     needs:
       - build-seatunnel
     steps:
+      - name: Get release version 🚀
+        id: getVersion
+        run: echo "::set-output name=version::$(tail -n -1 ./sea-tunnel/.version)"
+
       - name: Log in to Docker Hub 👀
         uses: docker/login-action@v3
         with:
