@@ -44,7 +44,7 @@ jobs:
       - name: Build and push the seatunnel docker image ✌️
         uses: docker/build-push-action@v5
         with:
-          context: ./sea-tunnel
+          context: .
           push: true
           tags: |
             ${{ secrets.USERNAME }}/sea-tunnel:${{env.app_version}}
