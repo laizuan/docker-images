@@ -11,6 +11,8 @@ jobs:
   build-seatunnel:
     name: Build SeaTunnel
     runs-on: macos-latest
+    outputs:
+      version: ""
     steps:
       - name: Checkout code 😀
         uses: actions/checkout@v4
