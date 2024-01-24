@@ -9,7 +9,8 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    # runs-on: macos-latest
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code 😀
         uses: actions/checkout@v4
@@ -17,12 +18,6 @@ jobs:
       - name: Get release version 🚀
         id: getVersion
         run: echo "::set-output name=version::$(tail -n -1 ./sea-tunnel/.version)"
-
-      - name: Log in to Docker Hub 👀
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
 
       - name: Build seatunnel 🔧
         run: |
@@ -33,6 +28,12 @@ jobs:
           sh ./bin/install-plugin.sh ${version}
           cd ../
           mv apache-seatunnel-${version} seatunnel
+
+      - name: Log in to Docker Hub 👀
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
 
       - name: Build and push the seatunnel docker image ✌️
         uses: docker/build-push-action@v5
