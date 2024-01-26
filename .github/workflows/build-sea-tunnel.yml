@@ -19,18 +19,14 @@ jobs:
     steps:
       - name: Checkout code 😀
         uses: actions/checkout@v4
-
       - name: Build seatunnel 🔧
         run: |
           wget -q "https://archive.apache.org/dist/seatunnel/${{env.app_version}}/apache-seatunnel-${{env.app_version}}-bin.tar.gz"
           tar -xzvf "apache-seatunnel-${{env.app_version}}-bin.tar.gz"
           cd apache-seatunnel-${{env.app_version}}
 
-## 重写脚本，ubuntu官方脚本有bug https://github.com/apache/seatunnel/commit/62eb82d44830411d1e851d36c3c825ccfcd4a788
           cat > ./bin/install-plugin.sh << EOF
-                          # get seatunnel home
                 SEATUNNEL_HOME=$(cd $(dirname $0);cd ../;pwd)
-                # connector default version is 2.3.3, you can also choose a custom version. eg: 2.1.2:  sh install-plugin.sh 2.1.2
                 version=2.3.3
                 if [ -n "$1" ]; then
                     version="$1"
@@ -38,7 +34,6 @@ jobs:
                 echo "Install hadoop shade jar, usage version is ${version}"
                 ${SEATUNNEL_HOME}/mvnw dependency:get -DgroupId=org.apache.seatunnel -Dclassifier=optional -DartifactId=seatunnel-hadoop3-3.1.4-uber -Dversion=${version} -Ddest=${SEATUNNEL_HOME}/lib
                 echo "Install SeaTunnel connectors plugins, usage version is ${version}"
-                # create the connectors directory
                 if [ ! -d ${SEATUNNEL_HOME}/connectors ];
                   then
                       mkdir ${SEATUNNEL_HOME}/connectors
