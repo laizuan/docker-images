@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
     paths:
-      - "sea-tunnel/.version"
       - ".github/workflows/build-sea-tunnel.yml"
 
 env:
@@ -23,13 +22,14 @@ jobs:
         run: |
           wget -q "https://archive.apache.org/dist/seatunnel/${{env.app_version}}/apache-seatunnel-${{env.app_version}}-bin.tar.gz"
           tar -xzvf "apache-seatunnel-${{env.app_version}}-bin.tar.gz"
+          rm -rf apache-seatunnel-${{env.app_version}}-bin.tar.gz
 
           cp -af ./sea-tunnel/install-plugin.sh ./apache-seatunnel-${{env.app_version}}/bin/install-plugin.sh
 
           cd apache-seatunnel-${{env.app_version}}
           sh ./bin/install-plugin.sh ${{env.app_version}}
           cd ../
-          mv apache-seatunnel-${{env.app_version}} seatunnel
+          tar -czvf apache-seatunnel-bin.tar.gz apache-seatunnel-${{env.app_version}}
           ls
 
       - name: Log in to Docker Hub 👀
