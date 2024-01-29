@@ -1,6 +1,6 @@
 FROM openjdk:8
 
-COPY /apache-seatunnel-bin.tar.gz /opt/apache-seatunnel-bin.tar.gz
+COPY ./apache-seatunnel-bin.tar.gz /opt/apache-seatunnel-bin.tar.gz
 WORKDIR /opt
 RUN tar -xzvf apache-seatunnel-bin.tar.gz
 RUN mv apache-seatunnel seatunnel

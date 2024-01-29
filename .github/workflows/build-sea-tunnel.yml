@@ -29,7 +29,8 @@ jobs:
           cd apache-seatunnel-${{env.app_version}}
           sh ./bin/install-plugin.sh ${{env.app_version}}
           cd ../
-          tar -czvf apache-seatunnel-bin.tar.gz apache-seatunnel-${{env.app_version}}
+          mv apache-seatunnel-${{env.app_version}} apache-seatunnel
+          tar -czvf apache-seatunnel-bin.tar.gz apache-seatunnel
           ls
 
       - name: Log in to Docker Hub 👀
