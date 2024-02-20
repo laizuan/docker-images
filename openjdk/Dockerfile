@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21.0.1_12-jre-alpine
+FROM eclipse-temurin:21.0.2_13-jre-alpine
 
 ENV TZ=Asia/Shanghai
 
@@ -6,4 +6,4 @@ ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 
 # add font
-RUN apk add fontconfig && apk add --update ttf-dejavu && fc-cache --force
+RUN apk add bash curl fontconfig && apk add --update ttf-dejavu && fc-cache --force
