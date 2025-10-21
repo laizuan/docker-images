@@ -9,3 +9,6 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo '$TZ' > /etc/timezone
 
 # add font
 RUN apk add bash curl fontconfig && apk add --update ttf-dejavu && fc-cache --force
+
+# copy arthas
+COPY --from=hengyunabc/arthas:latest /opt/arthas /opt/arthas
